@@ -7,12 +7,13 @@ News
 {% endblock title %}
 
 {% block content %}
-  <h2>All News</h2>
+  <h2>All News ({{ news | length }})</h2>
   {% for post in news reversed %}
     <a href="/news/{{ post.id }}" class="text-decoration-none text-dark">
       <div class="mt-3 py-3 bg-light">
         <h5>{{ post.title }}</h5>
-        <div>{{ post.content | truncatechars:50 | censor }}</div>
+        <div>{{ post.content | truncatewords:20 | censor }}</div>
+        <!-- <div>{{ post.content | truncatechars:50 | censor }}</div> -->
         <div class="small">{{ post.posted | date:"l d-m-Y H:i" }}</div>
       </div>
     </a>
