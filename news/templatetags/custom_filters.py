@@ -2,7 +2,7 @@ import re
 from django import template
 
 # Example words for censor filter
-BANNED_WORDS = ['warmly', 'cousin', 'her', 'boy']
+BANNED_WORDS = ['warmly', 'cousin', 'her', 'delay']
 
 register = template.Library()
 
