@@ -6,6 +6,9 @@ class Author(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.user.username
+
     def update_rating(self):
         Post = apps.get_model('news.Post')
         Comment = apps.get_model('news.Comment')

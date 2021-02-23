@@ -4,14 +4,17 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Post(models.Model):
     author = models.ForeignKey('accounts.Author', on_delete=models.CASCADE)
     post_type = models.CharField(
         max_length=1,
         choices=[
-            ('A', 'article'),
-            ('N', 'news')
+            ('A', 'Article'),
+            ('N', 'News')
         ],
         default='N'
     )
@@ -20,6 +23,9 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.title} ({self.posted.ctime()})'
 
     def like(self):
         self.rating += 1
@@ -47,6 +53,9 @@ class Comment(models.Model):
     text = models.TextField()
     posted = models.DateTimeField(auto_now_add=True)
     rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.text
 
     def like(self):
         self.rating += 1
