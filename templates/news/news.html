@@ -3,13 +3,17 @@
 {% load custom_filters %}
 
 {% block title %}
-News
+  News
 {% endblock title %}
 
 {% block content %}
-  <h2>All News ({{ news | length }})</h2>
+  <h2>All News ({{ all_news | length}})</h2>
 
-  <a class=" text-secondary" href="{% url 'post_create' %}">Add new post</a>
+  {% if is_not_author %}
+    <button><a href="sign/upgrade/" class="text-decoration-none text-secondary">Become an author</a></button>
+  {% else %}
+    <a class=" text-secondary" href="{% url 'post_create' %}">Add new post</a>
+  {% endif %}
 
   {% for post in news %}
     <a href="/news/{{ post.id }}" class="text-decoration-none text-dark">
@@ -17,15 +21,16 @@ News
         <h5>{{ post.title | censor }}</h5>
         <div>{{ post.content | truncatewords:20 | censor }}</div>
         <div class="small">{{ post.posted | date:"l d-m-Y H:i" }}</div>
-        <a class="small text-decoration-none text-secondary" href="{% url 'post_edit' post.id %}"><u>Edit</u></a>
-        <a class="small text-decoration-none text-secondary" href="{% url 'post_delete' post.id %}"><u>Delete</u></a>
+        {% if not is_not_author %}
+          <a class="small text-decoration-none text-secondary" href="{% url 'post_edit' post.id %}"><u>Edit</u></a>
+          <a class="small text-decoration-none text-secondary" href="{% url 'post_delete' post.id %}"><u>Delete</u></a>
+        {% endif %}
       </div>
     </a>
-    
   {% empty %}
     <h3>No news!</h3>
   {% endfor %}
-
+  <div class="my-3 text-decoration-none text-secondary">
   {% if is_paginated %}
     {% if page_obj.has_previous %}
       <a href="?page=1">First</a>
@@ -34,7 +39,7 @@ News
 
     {% for num in page_obj.paginator.page_range %}
       {% if page_obj.number == num %}
-        <a>{{ num }}</a>
+        <a class="text-primary">{{ num }}</a>
       {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:3 %}
         <a href="?page={{ num }}">{{ num }}</a>
       {% endif %}
@@ -45,6 +50,5 @@ News
       <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
     {% endif %}
   {% endif %}
-
-  
+  </div>
 {% endblock content %}

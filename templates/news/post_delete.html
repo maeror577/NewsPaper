@@ -3,14 +3,13 @@
 {% load custom_filters %}
 
 {% block title %}
-News
+  News
 {% endblock title %}
 
 {% block content %}
   <h2>{{ post.title | censor }}</h1>
   <h6>Posted by {{ post.author }} on {{ post.posted | date:"d-m-Y H:i" }}</h6>
   <div class="mt-3">{{ post.content | censor }}</div>
-
   <form method="post">
     {% csrf_token %}
     <h5 class="mt-3">Do you really want to delete this post?</h5>
