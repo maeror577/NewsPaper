@@ -69,7 +69,7 @@ class Command(BaseCommand):
         scheduler.add_job(
             send_weekly_digest,
             trigger=CronTrigger(
-                second="*/5"
+                day_of_week="mon", hour="00", minute="00"
             ),
             id="send_weekly_digest",
             max_instances=1,
