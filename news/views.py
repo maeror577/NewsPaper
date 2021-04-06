@@ -2,7 +2,9 @@ from django.views.generic import (ListView, DetailView, UpdateView,
                                   CreateView, DeleteView)
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
-from .models import Post
+from django.shortcuts import HttpResponseRedirect
+
+from .models import Post, Category
 from .filters import NewsFilter
 from .forms import NewsForm
 
@@ -22,9 +24,18 @@ class NewsList(LoginRequiredMixin, ListView):
         return context
 
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     template_name = 'news/post_detail.html'
     queryset = Post.objects.all()
+
+    def subscribe(request, pk):
+        user = request.user
+        category = Category.objects.get(pk=pk)
+        if user not in category.subscribers.all():
+            category.subscribers.add(user)
+        else:
+            category.subscribers.remove(user)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 class PostCreateView(PermissionRequiredMixin, CreateView):

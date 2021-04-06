@@ -44,8 +44,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
+
     'sign',
-    'news',
+    'news.app.NewsConfig',
     'accounts',
 ]
 
@@ -86,6 +88,8 @@ LOGIN_URL = 'accounts/login'
 
 LOGIN_REDIRECT_URL = '/'
 
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = LOGIN_REDIRECT_URL
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
@@ -99,9 +103,23 @@ ACCOUNT_USERNAME_REQUIRED = False
 
 ACCOUNT_AUHTENTICATION_METHOD = 'email'
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_FORMS = {'signup': 'sign.models.CommonSignupForm'}
+
+# Email
+
+# EMAIL_HOST = ''
+
+# EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = ''
+
+# EMAIL_HOST_PASSWORD = ''
+
+# EMAIL_PORT =
+
+# EMAIL_USE_TLS =
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -155,3 +173,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+
+# Apscheduler settings
+
+APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
+
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
