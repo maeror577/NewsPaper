@@ -1,5 +1,6 @@
 {% extends 'default.html' %}
 
+{% load static %}
 {% load custom_filters %}
 
 {% block title %}
@@ -7,48 +8,54 @@
 {% endblock title %}
 
 {% block content %}
-  <h2>All News ({{ all_news | length}})</h2>
+  <h1 class="news__title">All News ({{ all_news | length }})</h1>
 
   {% if is_not_author %}
-    <button><a href="sign/upgrade/" class="text-decoration-none text-secondary">Become an author</a></button>
+    <button class="news__author-button"><a href="sign/upgrade/">Become an author</a></button>
   {% else %}
-    <a class=" text-secondary" href="{% url 'post_create' %}">Add new post</a>
+    <button class="news__author-button"><a href="{% url 'post_create' %}">Add new post</a></button>
   {% endif %}
 
   {% for post in news %}
-    <a href="/news/{{ post.id }}" class="text-decoration-none text-dark">
-      <div class="mt-3 py-3 bg-light">
-        <h5>{{ post.title | censor }}</h5>
-        <div>{{ post.content | truncatewords:20 | censor }}</div>
-        <div class="small">{{ post.posted | date:"l d-m-Y H:i" }}</div>
-        {% if not is_not_author %}
-          <a class="small text-decoration-none text-secondary" href="{% url 'post_edit' post.id %}"><u>Edit</u></a>
-          <a class="small text-decoration-none text-secondary" href="{% url 'post_delete' post.id %}"><u>Delete</u></a>
-        {% endif %}
-      </div>
-    </a>
-  {% empty %}
-    <h3>No news!</h3>
-  {% endfor %}
-  <div class="my-3 text-decoration-none text-secondary">
-  {% if is_paginated %}
-    {% if page_obj.has_previous %}
-      <a href="?page=1">First</a>
-      <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
-    {% endif %}
-
-    {% for num in page_obj.paginator.page_range %}
-      {% if page_obj.number == num %}
-        <a class="text-primary">{{ num }}</a>
-      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:3 %}
-        <a href="?page={{ num }}">{{ num }}</a>
+    <article class="news__card">
+      <a href="/news/{{ post.id }}" class="news__card_link">
+        <h2 class="news__card_title">{{ post.title | censor }}</h2>
+        <p class="news__card_text">{{ post.content | truncatewords:20 | censor }}</p>
+        <p class="news__card_date">{{ post.posted | date:"l d-m-Y H:i" }}</p>
+      </a>
+      {% if not is_not_author %}
+        <div class="news__card_controls">
+          <a href="{% url 'post_edit' post.id %}"><img src="{% static 'img/edit.png' %}" alt="Edit post" width=15 height=15></a>
+          <a href="{% url 'post_delete' post.id %}"><img src="{% static 'img/delete.png' %}" alt="Delete post" widht=15 height=15></a>
+        </div>
       {% endif %}
-    {% endfor %}
+    </article>
+  {% empty %}
+    <h2>No news!</h2>
+  {% endfor %}
 
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">>>></a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
+  {% if is_paginated %}
+    <nav>
+      <ul class="news__pagination">
+        {% if page_obj.has_previous %}
+          <li><a href="?page=1">First</a></li>
+          <li><a href="?page={{ page_obj.previous_page_number }}"><<<</a></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <li class="news__pagination_active">{{ num }}</li>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:3 %}
+            <li><a href="?page={{ num }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li><a href="?page={{ page_obj.next_page_number }}">>>></a></li>
+          <li><a href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+        {% endif %}
+      </ul>
+    </nav>
   {% endif %}
-  </div>
+
 {% endblock content %}

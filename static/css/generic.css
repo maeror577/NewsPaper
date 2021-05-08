@@ -1,0 +1,83 @@
+/* Font settings */
+
+@import 'fonts-merriweather.css';
+
+
+
+/* Generic styles */
+
+html {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  margin: 30px auto;
+  font-family: 'Merriweather', Helvetica, Arial, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+h2 {
+  margin: 10px auto;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+h3 {
+  margin: 10px auto;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+hr {
+  margin: 0 auto;
+  border: none;
+  border-top: 2px dotted rgb(0,0,0);
+  width: 60%;
+}
+
+p {
+  margin: 10px 0;
+  padding: 0;
+}
+
+a {
+  color: rgb(0,0,0);
+  text-decoration: none;
+}
+
+input,
+select,
+textarea {
+  padding: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+textarea {
+  max-height: 8rem;
+  resize: none;
+}
+
+button, input[type=submit] {
+  padding: 10px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  border: 1px solid rgb(0,0,0,0.1);
+  text-transform: lowercase;
+  transition-duration: 0.5s;
+}
+
+button:hover, input[type=submit]:hover {
+  cursor: pointer;
+  border-color: rgb(0,0,0,0.7);
+  box-shadow: 0 0 3px black;
+  transform: scale(1.05);
+}

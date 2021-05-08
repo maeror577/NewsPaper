@@ -6,13 +6,21 @@
 
 {% block content %}
   {% if user.id == request.user.id %}
-    <h2>{{ user.username }}</h2>
-    <p>First name: {{ user.first_name }}</p>
-    <p>Last name: {{ user.last_name }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Joined on {{ user.date_joined }}</p>
+    <h1>{{ user.username }}</h1>
+    <div class="user-detail">
+      <p>First name:</p>
+      <p>{{ user.first_name }}</p>
+      <p>Last name:</p>
+      <p>{{ user.last_name }}</p>
+      <p>Email:</p>
+      <p>{{ user.email }}</p>
+      <p>Joined on:</p>
+      <p>{{ user.date_joined }}</p>
+    </div>
+
     <button><a href="{% url 'user_edit' user.id %}">Edit profile</a></button>
+
   {% else %}
-    <p>Permission denied!</p>
+    <h1>Permission denied!</h1>
   {% endif %}
 {% endblock content %}
