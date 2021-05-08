@@ -33,7 +33,7 @@ class Post(models.Model):
         return f'/news/{self.id}'
 
     def save(self, *args, **kwargs):
-        super.save(*args, **kwargs)
+        super().save(*args, **kwargs)
         cache.delete(f'post-{self.pk}')
 
     def like(self):
