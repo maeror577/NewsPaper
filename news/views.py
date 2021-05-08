@@ -3,6 +3,7 @@ from django.views.generic import (ListView, DetailView, UpdateView,
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.shortcuts import HttpResponseRedirect
+from django.core.cache import cache
 
 from .models import Post, Category
 from .filters import NewsFilter
@@ -27,6 +28,13 @@ class NewsList(LoginRequiredMixin, ListView):
 class PostDetailView(LoginRequiredMixin, DetailView):
     template_name = 'news/post_detail.html'
     queryset = Post.objects.all()
+
+    def get_object(self, queryset=None):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+        if not obj:
+            obj = super().get_object(queryset=queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+        return obj
 
     def subscribe(request, pk):
         user = request.user

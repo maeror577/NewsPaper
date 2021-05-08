@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.cache import cache
 
 
 class Category(models.Model):
@@ -27,6 +28,13 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title} ({self.posted.ctime()})'
+
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
+
+    def save(self, *args, **kwargs):
+        super.save(*args, **kwargs)
+        cache.delete(f'post-{self.pk}')
 
     def like(self):
         self.rating += 1
