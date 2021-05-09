@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'g9(&5czwl-aac)oce%=v@nr1f4a--c=5pmp!9743^i4bgq8_wb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -173,8 +173,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'templates', 'static')
 ]
 
 
@@ -190,5 +192,113 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+    }
+}
+
+# Logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'regular_console': {
+            'format': '[%(asctime)s] %(levelname)-9s %(message)s'
+        },
+        'warning_console': {
+            'format': '[%(asctime)s] %(levelname)-9s %(message)s %(pathname)s'
+        },
+        'error': {
+            'format': '[%(asctime)s] %(levelname)-9s %(message)s %(pathname)s %(exc_info)s'
+        },
+        'general_log': {
+            'format': '[%(asctime)s] %(levelname)-9s %(module)s: %(message)s'
+        },
+        'email': {
+            'format': '[%(asctime)s] %(levelname)-9s %(message)s %(pathname)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue'
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'regular_console',
+        },
+        'warning_handler': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'warning_console',
+        },
+        'error_handler': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'error',
+        },
+        'general_log_handler': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'formatter': 'general_log',
+            'filename': os.path.join(BASE_DIR, 'log_files', 'general.log'),
+        },
+        'error_file_handler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'error',
+            'filename': os.path.join(BASE_DIR, 'log_files', 'errors.log'),
+        },
+        'security_file_handler': {
+            'level': 'INFO',
+            'formatter': 'general_log',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'log_files', 'security.log'),
+        },
+        'mail_admin': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'warning_console',
+            'filters': ['require_debug_false'],
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'warning_handler', 'general_log_handler', 'error_handler'],
+            'level': 'DEBUG',
+        },
+        'django.request': {
+            'handlers': ['error_file_handler', 'mail_admin'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.template': {
+            'handlers': ['error_file_handler'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['error_file_handler', 'mail_admin'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.db_backend': {
+            'handlers': ['error_file_handler'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['security_file_handler'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     }
 }

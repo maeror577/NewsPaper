@@ -198,6 +198,7 @@ form > button:last-of-type {
 }
 
 .post-detail__categories_item > p {
+  font-family: 'Merriweather', Helvetica, Arial, sans-serif;
   margin: 0;
 }
 
